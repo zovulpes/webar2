@@ -1,60 +1,82 @@
 <!doctype html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <title>MindAR Image Tracking</title>
 
-  <style>
-    html,
-    body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
-    a-scene {
-      width: 100vw;
-      height: 100vh;
-    }
-  </style>
-</head>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
 
-<body>
+      #status {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 9999;
+        padding: 8px;
+        background: white;
+        color: black;
+        font-family: Arial, sans-serif;
+      }
+    </style>
+  </head>
 
-  <a-scene
-    mindar-image="imageTargetSrc: ./targets.mind;"
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false"
-  >
+  <body>
+    <div id="status">Загрузка...</div>
 
-    <a-assets>
-      <a-asset-item
-        id="dog"
-        src="./dog.glb">
-      </a-asset-item>
-    </a-assets>
+    <a-scene
+      mindar-image="imageTargetSrc: ./targets.mind;"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+    >
+      <a-assets>
+        <a-asset-item id="dog" src="./dog.glb"> </a-asset-item>
+      </a-assets>
 
-    <a-camera
-      position="0 0 0"
-      look-controls="enabled: false">
-    </a-camera>
+      <a-light type="ambient" intensity="2"> </a-light>
 
-    <a-entity mindar-image-target="targetIndex: 0">
+      <a-light type="directional" position="0 1 1" intensity="2"> </a-light>
 
-      <a-gltf-model
-        src="#dog"
-        position="0 0 0.1"
-        rotation="0 0 0"
-        scale="0.01 0.01 0.01">
-      </a-gltf-model>
+      <a-camera position="0 0 0" look-controls="enabled: false"> </a-camera>
 
-    </a-entity>
+      <a-entity id="target" mindar-image-target="targetIndex: 0">
+        <a-gltf-model
+          id="dog-model"
+          src="#dog"
+          position="0 0 0.1"
+          rotation="0 0 0"
+          scale="0.1 0.1 0.1"
+        >
+        </a-gltf-model>
+      </a-entity>
+    </a-scene>
 
-  </a-scene>
+    <script>
+      const status = document.querySelector("#status");
+      const model = document.querySelector("#dog-model");
+      const target = document.querySelector("#target");
 
-</body>
+      model.addEventListener("model-loaded", () => {
+        status.textContent = "Модель загружена";
+      });
+
+      model.addEventListener("model-error", () => {
+        status.textContent = "ОШИБКА загрузки dog.glb";
+      });
+
+      target.addEventListener("targetFound", () => {
+        status.textContent += " | Маркер найден";
+      });
+    </script>
+  </body>
 </html>
