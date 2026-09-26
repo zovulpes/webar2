@@ -17,65 +17,33 @@
         height: 100%;
         overflow: hidden;
       }
-
-      #status {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        z-index: 9999;
-        padding: 8px;
-        background: white;
-        color: black;
-        font-family: Arial, sans-serif;
-      }
     </style>
   </head>
 
   <body>
-    <div id="status">Загрузка...</div>
-
     <a-scene
       mindar-image="imageTargetSrc: ./targets.mind;"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <a-asset-item id="dog" src="./dog.glb"> </a-asset-item>
+        <a-asset-item id="dog" src="./dog.glb"></a-asset-item>
       </a-assets>
 
-      <a-light type="ambient" intensity="2"> </a-light>
+      <a-light type="ambient" intensity="2"></a-light>
 
-      <a-light type="directional" position="0 1 1" intensity="2"> </a-light>
+      <a-light type="directional" position="0 1 1" intensity="2"></a-light>
 
-      <a-camera position="0 0 0" look-controls="enabled: false"> </a-camera>
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity id="target" mindar-image-target="targetIndex: 0">
+      <a-entity mindar-image-target="targetIndex: 0">
         <a-gltf-model
           src="#dog"
           position="0 0.2 0.1"
           rotation="0 0 0"
           scale="0.5 0.5 0.5"
-        >
-        </a-gltf-model>
+        ></a-gltf-model>
       </a-entity>
     </a-scene>
-
-    <script>
-      const status = document.querySelector("#status");
-      const model = document.querySelector("#dog-model");
-      const target = document.querySelector("#target");
-
-      model.addEventListener("model-loaded", () => {
-        status.textContent = "Модель загружена";
-      });
-
-      model.addEventListener("model-error", () => {
-        status.textContent = "ОШИБКА загрузки dog.glb";
-      });
-
-      target.addEventListener("targetFound", () => {
-        status.textContent += " | Маркер найден";
-      });
-    </script>
   </body>
 </html>
